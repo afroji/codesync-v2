@@ -15,6 +15,15 @@ const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
 
+let BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`;
+if (BACKEND_URL && !/^https?:\/\//i.test(BACKEND_URL)) {
+  const isLocal = BACKEND_URL.includes('localhost') || BACKEND_URL.includes('127.0.0.1');
+  BACKEND_URL = `${isLocal ? 'http' : 'https'}://${BACKEND_URL}`;
+}
+if (BACKEND_URL.endsWith('/')) {
+  BACKEND_URL = BACKEND_URL.slice(0, -1);
+}
+
 if (JWT_SECRET.length < 32) {
   console.warn('WARNING: JWT_SECRET is shorter than 32 characters. Use a longer secret in production.');
 }
@@ -25,9 +34,11 @@ module.exports = {
   JWT_SECRET,
   JWT_EXPIRES_IN,
   CLIENT_URL,
+  BACKEND_URL,
   SYNC_MODE,
   MONGODB_URI,
   REDIS_URL,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
 };
+

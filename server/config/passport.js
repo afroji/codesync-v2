@@ -4,7 +4,7 @@
  */
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { User } = require('../models');
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require('./constants');
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BACKEND_URL } = require('./constants');
 
 function configure(passport) {
   if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
