@@ -10,3 +10,5 @@ npm run dev
 
 ## Stack
 React + Vite + Tailwind, Node + Express, MongoDB, Redis, Socket.IO, Yjs
+
+TEXS
