@@ -1,0 +1,602 @@
+/* Reusable component classes built on the tokens defined in index.css */
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: var(--radius-control);
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, filter 0.15s ease;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  background: var(--color-bg-surface);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.btn-primary {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.btn-run {
+  background: var(--color-accent-run);
+  border-color: var(--color-accent-run-border);
+  color: #ffffff;
+}
+
+.btn-run:hover:not(:disabled) {
+  background: var(--color-accent-run-border);
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: var(--color-border-strong);
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-bg-hover);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.btn-danger {
+  background: var(--color-accent-danger);
+  border-color: var(--color-accent-danger);
+  color: #ffffff;
+}
+
+.btn-danger:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* ---------- Inputs ---------- */
+.input {
+  width: 100%;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  padding: 8px 11px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.input:focus {
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px rgba(62, 123, 250, 0.15);
+}
+
+.input-error {
+  border-color: var(--color-accent-danger);
+  box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.15);
+}
+
+/* ---------- Language badges ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+}
+
+.badge-js {
+  color: var(--color-badge-js-text);
+  background: var(--color-badge-js-bg);
+  border-color: var(--color-badge-js-border);
+}
+
+.badge-python {
+  color: var(--color-badge-python-text);
+  background: var(--color-badge-python-bg);
+  border-color: var(--color-badge-python-border);
+}
+
+.badge-java {
+  color: var(--color-badge-java-text);
+  background: var(--color-badge-java-bg);
+  border-color: var(--color-badge-java-border);
+}
+
+.badge-cpp {
+  color: var(--color-badge-cpp-text);
+  background: var(--color-badge-cpp-bg);
+  border-color: var(--color-badge-cpp-border);
+}
+
+.badge-html {
+  color: var(--color-badge-html-text);
+  background: var(--color-badge-html-bg);
+  border-color: var(--color-badge-html-border);
+}
+
+.badge-css {
+  color: var(--color-badge-css-text);
+  background: var(--color-badge-css-bg);
+  border-color: var(--color-badge-css-border);
+}
+
+/* ---------- Panel containers ---------- */
+.panel-sidebar {
+  width: var(--layout-sidebar-width);
+  flex-shrink: 0;
+  background: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-right {
+  width: var(--layout-right-panel-width);
+  flex-shrink: 0;
+  background: var(--color-bg-sidebar);
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-topbar {
+  height: var(--layout-topbar-height);
+  flex-shrink: 0;
+  background: var(--color-bg-topbar);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 12px;
+}
+
+.panel-bottom {
+  height: var(--layout-bottom-panel-height);
+  flex-shrink: 0;
+  background: var(--color-bg-bottom-panel);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Tab system (editor file tabs) ---------- */
+.tab-bar {
+  display: flex;
+  align-items: stretch;
+  background: var(--color-bg-tabbar);
+  border-bottom: 1px solid var(--color-border);
+  height: var(--layout-tab-height);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  border-right: 1px solid var(--color-border);
+  border-top: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-hover);
+}
+
+.tab.active {
+  background: var(--color-bg-editor);
+  color: var(--color-text-primary);
+  border-top: 2px solid var(--color-accent-primary);
+}
+
+/* ---------- Sidebar rows ---------- */
+.sidebar-row {
+  height: var(--layout-sidebar-row-height);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 0 10px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-control);
+  border-left: 2px solid transparent;
+}
+
+.sidebar-row:hover {
+  background: var(--color-bg-hover);
+}
+
+.sidebar-row.active {
+  background: var(--color-bg-active);
+  border-left: 2px solid var(--color-accent-primary);
+  padding-left: 8px;
+  color: var(--color-text-primary);
+}
+
+/* ---------- Section labels ---------- */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ---------- Dividers ---------- */
+.divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--color-border);
+}
+
+.divider-h {
+  height: 1px;
+  width: 100%;
+  background: var(--color-border);
+}
+
+/* ---------- Presence avatars ---------- */
+.presence-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-avatar);
+  border: 2px solid var(--color-bg-topbar);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -7px;
+}
+
+.presence-avatar:first-child {
+  margin-left: 0;
+}
+
+/* ---------- Status dots ---------- */
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-online {
+  background: var(--color-accent-success);
+}
+
+.status-idle {
+  background: var(--color-accent-warning);
+}
+
+.status-offline {
+  background: var(--color-text-muted);
+}
+
+/* ---------- Room code badge ---------- */
+.room-code {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-bg-chip);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  padding: 4px 8px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* ---------- Room layout shell ---------- */
+.room-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-room);
+  overflow: hidden;
+}
+
+.room-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.room-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.monaco-container {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ---------- Underline tabs (right sidebar, bottom panel) ---------- */
+.tab-underline {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.tab-underline:hover {
+  color: var(--color-text-primary);
+}
+
+.tab-underline.active {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-accent-primary);
+}
+
+/* ---------- Bottom panel output ---------- */
+.bottom-panel-output {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding: var(--layout-panel-padding);
+  overflow-y: auto;
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+.output-line-success {
+  color: var(--color-accent-success);
+}
+
+.output-line-error {
+  color: var(--color-accent-danger);
+}
+
+/* ---------- Spinner (room connecting screen) ---------- */
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border-strong);
+  border-top-color: var(--color-accent-primary);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Sync mode badge (CRDT vs NAIVE, for paper experiments) ---------- */
+.sync-mode-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 2px 7px;
+  border-radius: var(--radius-control);
+  background: rgba(62, 123, 250, 0.15);
+  border: 1px solid rgba(62, 123, 250, 0.3);
+  color: var(--color-accent-primary);
+}
+
+.sync-mode-badge.naive {
+  background: rgba(248, 81, 73, 0.15);
+  border-color: rgba(248, 81, 73, 0.3);
+  color: var(--color-accent-danger);
+}
+
+/* ---------- Metrics pill (live data-flowing indicator, full dashboard Day 21) ---------- */
+.metrics-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  padding: 2px 8px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+
+.metrics-conflicts {
+  color: var(--color-accent-danger);
+  font-weight: 600;
+}
+
+/* ---------- Presence avatar typing indicator (Day 10) ---------- */
+.presence-avatar-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.avatar-typing-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-success);
+  border: 2px solid var(--color-bg-topbar);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* ---------- Tab bar: close / dirty / add (Day 11) ---------- */
+.tab-close {
+  display: flex;
+  margin-left: 2px;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+.tab-close:hover {
+  background: var(--color-bg-active);
+}
+
+.tab-dirty-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent-warning);
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+
+.tab-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-tab-height);
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.tab-add:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-hover);
+}
+
+/* ---------- Sidebar file row: open indicator + "..." menu (Day 11) ---------- */
+.open-file-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent-primary);
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.file-row-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-control);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sidebar-row:hover .file-row-menu-btn {
+  display: flex;
+}
+
+.file-row-menu-btn:hover {
+  background: var(--color-bg-active);
+  color: var(--color-text-primary);
+}
+
+.file-row-menu {
+  position: absolute;
+  top: 22px;
+  right: 0;
+  z-index: 20;
+  min-width: 120px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  padding: 4px;
+}
+
+.file-row-menu-item {
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-row-menu-item:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.file-row-menu-item.danger {
+  color: var(--color-accent-danger);
+}
+
+.file-row-menu-item.danger:hover {
+  background: rgba(248, 81, 73, 0.1);
+}
+
+/* ---------- New file modal (Day 11) ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-card {
+  width: 320px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-card);
+  padding: 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}

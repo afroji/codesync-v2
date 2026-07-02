@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Surfaces */
+  --color-bg-body: #0a0a0a;
+  --color-bg-room: #0a0a0a;
+  --color-bg-topbar: #0c0c0c;
+  --color-bg-bottom-panel: #0c0c0c;
+  --color-bg-tabbar: #0f0f0f;
+  --color-bg-sidebar: #111111;
+  --color-bg-surface: #111111;
+  --color-bg-editor: #0d0d0d;
+  --color-bg-input: #0d0d0d;
+  --color-bg-card: #121212;
+  --color-bg-login-card: #101010;
+  --color-bg-chip: #151515;
+  --color-bg-hover: #1a1a1a;
+  --color-bg-active: #1c1c1c;
+
+  /* Borders */
+  --color-border: #1f1f1f;
+  --color-border-strong: #2e2e2e;
+
+  /* Text */
+  --color-text-primary: #e8e8e8;
+  --color-text-secondary: #a0a0a0;
+  --color-text-muted: #6b6b6b;
+  --color-text-accent: #6ea0ff;
+
+  /* Accents */
+  --color-accent-primary: #3e7bfa;
+  --color-accent-run: #238636;
+  --color-accent-run-border: #2ea043;
+  --color-accent-danger: #f85149;
+  --color-accent-warning: #e3b341;
+  --color-accent-success: #3fb950;
+
+  /* Presence / cursor colors */
+  --color-cursor-1: #2dd4bf;
+  --color-cursor-2: #fb7185;
+  --color-cursor-3: #a78bfa;
+  --color-cursor-4: #fbbf24;
+  --color-cursor-5: #4ade80;
+  --color-cursor-6: #f472b6;
+
+  /* Language badge colors */
+  --color-badge-js-text: #f0db4f;
+  --color-badge-js-bg: rgba(240, 219, 79, 0.1);
+  --color-badge-js-border: rgba(240, 219, 79, 0.2);
+
+  --color-badge-python-text: #6ea0ff;
+  --color-badge-python-bg: rgba(53, 114, 165, 0.15);
+  --color-badge-python-border: rgba(53, 114, 165, 0.3);
+
+  --color-badge-java-text: #e0a44e;
+  --color-badge-java-bg: rgba(176, 114, 25, 0.15);
+  --color-badge-java-border: rgba(176, 114, 25, 0.3);
+
+  --color-badge-cpp-text: #b892ff;
+  --color-badge-cpp-bg: rgba(130, 80, 223, 0.14);
+  --color-badge-cpp-border: rgba(130, 80, 223, 0.28);
+
+  --color-badge-html-text: #f0866b;
+  --color-badge-html-bg: rgba(227, 76, 38, 0.12);
+  --color-badge-html-border: rgba(227, 76, 38, 0.25);
+
+  --color-badge-css-text: #6ea0ff;
+  --color-badge-css-bg: rgba(41, 101, 241, 0.15);
+  --color-badge-css-border: rgba(41, 101, 241, 0.3);
+
+  /* Layout constants */
+  --layout-topbar-height: 40px;
+  --layout-tab-height: 36px;
+  --layout-sidebar-row-height: 30px;
+  --layout-bottom-panel-height: 200px;
+  --layout-sidebar-width: 220px;
+  --layout-right-panel-width: 280px;
+  --layout-panel-padding: 12px;
+
+  /* Radius */
+  --radius-control: 6px;
+  --radius-card: 8px;
+  --radius-avatar: 50%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-bg-body);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: rgba(62, 123, 250, 0.3);
+}
+
+/* Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}

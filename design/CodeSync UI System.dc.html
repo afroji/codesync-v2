@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { background:#050505; margin:0; font-family:'Geist','-apple-system',sans-serif; }
+  * { box-sizing:border-box; }
+  ::selection { background:rgba(62,123,250,0.3); }
+</style>
+</helmet>
+
+<section style="width:100%;display:flex;flex-direction:column;gap:4px;padding:12px 4px 4px">
+  <div style="font-family:'Geist',sans-serif;font-size:22px;color:#e8e8e8;font-weight:600;letter-spacing:-0.01em">CodeSync — Complete UI System</div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6b6b6b">Dark theme · real-time collaborative code editor · Geist / JetBrains Mono</div>
+</section>
+
+<section id="s2" style="display:flex;flex-direction:column;gap:10px;padding:8px 4px 28px">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#3e7bfa;font-weight:600">SCREEN 2</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b">ROOM / EDITOR WORKSPACE — the priority screen</span>
+  </div>
+
+  <div style="width:1440px;height:868px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;font-size:13px;color:#e8e8e8">
+
+    <!-- TOP BAR -->
+    <div style="height:40px;flex-shrink:0;background:#0c0c0c;border-bottom:1px solid #1f1f1f;display:flex;align-items:center;padding:0 12px;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:16px;height:16px;background:#3e7bfa;border-radius:4px;display:flex;align-items:center;justify-content:center"><div style="width:6px;height:6px;background:#0c0c0c;border-radius:1px"></div></div>
+        <span style="font-size:13px;font-weight:600;color:#e8e8e8;letter-spacing:-0.01em">CodeSync</span>
+      </div>
+      <div style="width:1px;height:18px;background:#1f1f1f"></div>
+      <div style="display:flex;align-items:center;gap:6px;background:#151515;border:1px solid #1f1f1f;border-radius:6px;padding:4px 8px;cursor:pointer">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a0a0a0">abc-123-xyz</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:6px;cursor:pointer;color:#a0a0a0">
+        <span style="width:8px;height:8px;background:#f0db4f;border-radius:2px"></span>
+        <span style="font-size:13px">JavaScript</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+
+      <!-- presence center -->
+      <div style="flex:1;display:flex;align-items:center;justify-content:center">
+        <div style="display:flex;align-items:center">
+          <div style="width:24px;height:24px;border-radius:50%;background:#2dd4bf;color:#062822;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;border:2px solid #0c0c0c;margin-left:0">Y</div>
+          <div style="width:24px;height:24px;border-radius:50%;background:#fb7185;color:#3d0a15;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;border:2px solid #0c0c0c;margin-left:-7px">A</div>
+          <div style="width:24px;height:24px;border-radius:50%;background:#a78bfa;color:#1e1147;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;border:2px solid #0c0c0c;margin-left:-7px">S</div>
+          <div style="width:24px;height:24px;border-radius:50%;background:#fbbf24;color:#3d2c02;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;border:2px solid #0c0c0c;margin-left:-7px">M</div>
+          <div style="width:24px;height:24px;border-radius:50%;background:#151515;color:#a0a0a0;font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;border:2px solid #0c0c0c;margin-left:-7px">+2</div>
+        </div>
+      </div>
+
+      <!-- right actions -->
+      <div style="display:flex;align-items:center;gap:8px">
+        <button style="display:flex;align-items:center;gap:6px;background:#238636;border:1px solid #2ea043;color:#ffffff;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:5px 12px;border-radius:6px;cursor:pointer">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="#ffffff"><polygon points="6 4 20 12 6 20"/></svg>
+          Run
+        </button>
+        <button style="display:flex;align-items:center;gap:6px;background:#111;border:1px solid #1f1f1f;color:#6b6b6b;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:5px 12px;border-radius:6px;cursor:not-allowed">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          Save
+        </button>
+        <button style="display:flex;align-items:center;gap:6px;background:#151515;border:1px solid #2e2e2e;color:#e8e8e8;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:5px 12px;border-radius:6px;cursor:pointer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7h16v-7"/><polyline points="8 7 12 3 16 7"/><line x1="12" y1="3" x2="12" y2="14"/></svg>
+          Share
+        </button>
+        <div style="width:1px;height:18px;background:#1f1f1f"></div>
+        <span style="font-size:13px;color:#6ea0ff;cursor:pointer;padding:0 4px">Login</span>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div style="flex:1;display:flex;min-height:0">
+
+      <!-- LEFT SIDEBAR -->
+      <div style="width:220px;flex-shrink:0;background:#111111;border-right:1px solid #1f1f1f;display:flex;flex-direction:column">
+        <div style="height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;color:#6b6b6b;font-weight:600">FILES</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="2" style="cursor:pointer"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;padding:0 6px">
+          <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:6px;background:#1c1c1c;border-left:2px solid #3e7bfa;cursor:pointer">
+            <span style="width:9px;height:9px;background:#f0db4f;border-radius:2px;flex-shrink:0"></span>
+            <span style="font-size:13px;color:#e8e8e8">main.js</span>
+            <span style="margin-left:auto;width:6px;height:6px;background:#e3b341;border-radius:50%"></span>
+          </div>
+          <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 8px 0 10px;border-radius:6px;cursor:pointer;color:#a0a0a0">
+            <span style="width:9px;height:9px;background:#2965f1;border-radius:2px;flex-shrink:0"></span>
+            <span style="font-size:13px">style.css</span>
+          </div>
+          <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 8px 0 10px;border-radius:6px;cursor:pointer;color:#a0a0a0">
+            <span style="width:9px;height:9px;background:#e34c26;border-radius:2px;flex-shrink:0"></span>
+            <span style="font-size:13px">index.html</span>
+          </div>
+        </div>
+        <div style="margin-top:auto;padding:12px;border-top:1px solid #1f1f1f">
+          <div style="display:flex;align-items:center;gap:8px;color:#6b6b6b">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <span style="font-size:12px;line-height:1.35">Login to save projects &amp; use AI</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDITOR COLUMN -->
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+
+        <!-- TAB BAR -->
+        <div style="height:36px;flex-shrink:0;background:#0f0f0f;border-bottom:1px solid #1f1f1f;display:flex;align-items:stretch">
+          <div style="display:flex;align-items:center;gap:8px;padding:0 14px;background:#0d0d0d;border-right:1px solid #1f1f1f;border-top:2px solid #3e7bfa;cursor:pointer">
+            <span style="width:9px;height:9px;background:#f0db4f;border-radius:2px"></span>
+            <span style="font-size:13px;color:#e8e8e8">main.js</span>
+            <span style="width:7px;height:7px;background:#e3b341;border-radius:50%;margin-left:2px"></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:0 14px;border-right:1px solid #1f1f1f;cursor:pointer;color:#6b6b6b;border-top:2px solid transparent">
+            <span style="width:9px;height:9px;background:#2965f1;border-radius:2px"></span>
+            <span style="font-size:13px">style.css</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="2" style="margin-left:2px"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+          </div>
+        </div>
+
+        <!-- EDITOR AREA -->
+        <div style="flex:1;min-height:0;background:#0d0d0d;position:relative;overflow:hidden">
+          <div style="position:relative;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:20px;padding:8px 0;color:#e6edf3;white-space:pre">
+
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">1</span><span><span style="color:#ff7b72">import</span> { createRoom, broadcast } <span style="color:#ff7b72">from</span> <span style="color:#a5d6ff">'./sync'</span>;</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">2</span><span></span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">3</span><span><span style="color:#ff7b72">const</span> <span style="color:#79c0ff">room</span> = <span style="color:#d2a8ff">createRoom</span>({</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">4</span><span>  id: <span style="color:#a5d6ff">'abc-123-xyz'</span>,</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">5</span><span>  maxPeers: <span style="color:#79c0ff">12</span>,</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">6</span><span>});</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">7</span><span></span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">8</span><span style="color:#8b949e">// Sync cursor position across peers</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">9</span><span><span style="color:#ff7b72">function</span> <span style="color:#d2a8ff">onCursorMove</span>(peer, position) {</span></div>
+            <div style="display:flex;position:relative"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">10</span><span>  <span style="color:#d2a8ff">broadcast</span>(room, {</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">11</span><span>    type: <span style="color:#a5d6ff">'cursor'</span>,</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">12</span><span>    peer: peer.<span style="color:#79c0ff">id</span>,</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">13</span><span>    position,</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">14</span><span>  });</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">15</span><span>}</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">16</span><span></span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">17</span><span>room.<span style="color:#d2a8ff">on</span>(<span style="color:#a5d6ff">'join'</span>, (peer) =&gt; {</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">18</span><span>  console.<span style="color:#d2a8ff">log</span>(<span style="color:#a5d6ff">`${peer.name} joined`</span>);</span></div>
+            <div style="display:flex"><span style="width:52px;text-align:right;padding-right:16px;color:#484f58;user-select:none">19</span><span>});</span></div>
+
+            <!-- Alex cursor (line 4) -->
+            <div style="position:absolute;top:68px;left:180px;height:20px;width:2px;background:#fb7185">
+              <div style="position:absolute;top:-17px;left:0;background:#fb7185;color:#3d0a15;font-family:'Geist',sans-serif;font-size:11px;font-weight:600;padding:1px 6px;border-radius:4px 4px 4px 0;white-space:nowrap">Alex</div>
+            </div>
+            <!-- You cursor (line 11) -->
+            <div style="position:absolute;top:208px;left:196px;height:20px;width:2px;background:#2dd4bf">
+              <div style="position:absolute;top:-17px;left:0;background:#2dd4bf;color:#062822;font-family:'Geist',sans-serif;font-size:11px;font-weight:600;padding:1px 6px;border-radius:4px 4px 4px 0;white-space:nowrap">You</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM PANEL -->
+        <div style="height:200px;flex-shrink:0;background:#0c0c0c;border-top:1px solid #1f1f1f;display:flex;flex-direction:column">
+          <div style="height:32px;flex-shrink:0;display:flex;align-items:center;padding:0 6px 0 0;border-bottom:1px solid #1f1f1f">
+            <div style="display:flex;align-items:stretch;height:100%">
+              <div style="display:flex;align-items:center;padding:0 14px;font-size:12px;color:#e8e8e8;border-bottom:2px solid #3e7bfa;cursor:pointer">OUTPUT</div>
+              <div style="display:flex;align-items:center;padding:0 14px;font-size:12px;color:#6b6b6b;border-bottom:2px solid transparent;cursor:pointer">PROBLEMS</div>
+              <div style="display:flex;align-items:center;padding:0 14px;font-size:12px;color:#6b6b6b;border-bottom:2px solid transparent;cursor:pointer">TERMINAL</div>
+            </div>
+            <div style="margin-left:auto;display:flex;align-items:center;gap:10px;padding-right:8px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#3fb950" style="cursor:pointer"><polygon points="6 4 20 12 6 20"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="2" style="cursor:pointer"><polyline points="6 15 12 9 18 15"/></svg>
+            </div>
+          </div>
+          <div style="flex:1;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:19px;color:#a0a0a0;overflow:hidden">
+            <div><span style="color:#6b6b6b">$</span> node main.js</div>
+            <div style="color:#8b949e">&gt; room created: abc-123-xyz</div>
+            <div style="color:#8b949e">&gt; Alex joined</div>
+            <div style="color:#8b949e">&gt; broadcasting cursor events</div>
+            <div style="color:#3fb950;margin-top:4px">compiled successfully in 42ms</div>
+            <div style="display:flex;align-items:center;gap:2px;margin-top:2px"><span style="color:#6b6b6b">$</span> <span style="width:7px;height:14px;background:#e6edf3;display:inline-block;margin-left:4px"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div style="width:280px;flex-shrink:0;background:#111111;border-left:1px solid #1f1f1f;display:flex;flex-direction:column">
+        <div style="height:36px;flex-shrink:0;display:flex;align-items:stretch;border-bottom:1px solid #1f1f1f">
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#e8e8e8;border-bottom:2px solid #3e7bfa;cursor:pointer">Chat</div>
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6b6b;border-bottom:2px solid transparent;cursor:pointer">Members</div>
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;font-size:13px;color:#6b6b6b;border-bottom:2px solid transparent;cursor:pointer">AI
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="2.2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          </div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;padding:14px 12px;gap:14px;overflow:hidden">
+          <div style="display:flex;gap:8px">
+            <div style="width:22px;height:22px;border-radius:50%;background:#fb7185;color:#3d0a15;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">A</div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:12px;font-weight:600;color:#e8e8e8">Alex</span><span style="font-size:10px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">14:22</span></div>
+              <div style="font-size:13px;color:#c4c4c4;line-height:1.4">pushed the cursor sync fix</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="width:22px;height:22px;border-radius:50%;background:#a78bfa;color:#1e1147;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">S</div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:12px;font-weight:600;color:#e8e8e8">Sam</span><span style="font-size:10px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">14:22</span></div>
+              <div style="font-size:13px;color:#c4c4c4;line-height:1.4">nice, testing it now</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-direction:row-reverse">
+            <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end">
+              <span style="font-size:10px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">14:23</span>
+              <div style="font-size:13px;color:#e8e8e8;line-height:1.4;background:#1c2a44;border:1px solid #26385c;padding:6px 10px;border-radius:8px 8px 2px 8px">lgtm, merging now</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="width:22px;height:22px;border-radius:50%;background:#fbbf24;color:#3d2c02;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">M</div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:12px;font-weight:600;color:#e8e8e8">Mia</span><span style="font-size:10px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">14:24</span></div>
+              <div style="font-size:13px;color:#c4c4c4;line-height:1.4">can someone check line 12?</div>
+            </div>
+          </div>
+        </div>
+        <div style="flex-shrink:0;padding:10px 12px;border-top:1px solid #1f1f1f">
+          <div style="display:flex;align-items:center;gap:8px;background:#0d0d0d;border:1px solid #1f1f1f;border-radius:8px;padding:8px 10px">
+            <input placeholder="Message the room..." style="flex:1;background:transparent;border:none;outline:none;color:#e8e8e8;font-family:'Geist',sans-serif;font-size:13px" />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3e7bfa" stroke-width="2" style="cursor:pointer"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="s2b" style="display:flex;flex-direction:column;gap:10px;padding:8px 4px 28px">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#3e7bfa;font-weight:600">SCREEN 2 · PANEL STATES</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b">RIGHT SIDEBAR — Chat / Members / AI (locked)</span>
+  </div>
+
+  <div style="display:flex;gap:20px;align-items:flex-start">
+
+    <!-- CHAT panel -->
+    <div style="width:280px;height:520px;background:#111111;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;color:#e8e8e8">
+      <div style="height:36px;flex-shrink:0;display:flex;align-items:stretch;border-bottom:1px solid #1f1f1f">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#e8e8e8;border-bottom:2px solid #3e7bfa">Chat</div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6b6b;border-bottom:2px solid transparent">Members</div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;font-size:13px;color:#6b6b6b;border-bottom:2px solid transparent">AI</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;padding:14px 12px;gap:14px;overflow:hidden">
+        <div style="display:flex;gap:8px">
+          <div style="width:22px;height:22px;border-radius:50%;background:#fb7185;color:#3d0a15;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">A</div>
+          <div style="display:flex;flex-direction:column;gap:3px"><div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:12px;font-weight:600">Alex</span><span style="font-size:10px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">14:22</span></div><div style="font-size:13px;color:#c4c4c4;line-height:1.4">pushed the cursor sync fix</div></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="width:22px;height:22px;border-radius:50%;background:#a78bfa;color:#1e1147;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">S</div>
+          <div style="display:flex;flex-direction:column;gap:3px"><div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:12px;font-weight:600">Sam</span><span style="font-size:10px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">14:22</span></div><div style="font-size:13px;color:#c4c4c4;line-height:1.4">nice, testing it now</div></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-direction:row-reverse">
+          <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end"><span style="font-size:10px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">14:23</span><div style="font-size:13px;color:#e8e8e8;line-height:1.4;background:#1c2a44;border:1px solid #26385c;padding:6px 10px;border-radius:8px 8px 2px 8px">lgtm, merging now</div></div>
+        </div>
+      </div>
+      <div style="flex-shrink:0;padding:10px 12px;border-top:1px solid #1f1f1f">
+        <div style="display:flex;align-items:center;gap:8px;background:#0d0d0d;border:1px solid #1f1f1f;border-radius:8px;padding:8px 10px">
+          <span style="flex:1;color:#6b6b6b;font-size:13px">Message the room...</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3e7bfa" stroke-width="2"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBERS panel -->
+    <div style="width:280px;height:520px;background:#111111;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;color:#e8e8e8">
+      <div style="height:36px;flex-shrink:0;display:flex;align-items:stretch;border-bottom:1px solid #1f1f1f">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6b6b;border-bottom:2px solid transparent">Chat</div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#e8e8e8;border-bottom:2px solid #3e7bfa">Members</div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6b6b;border-bottom:2px solid transparent">AI</div>
+      </div>
+      <div style="padding:8px 6px;display:flex;flex-direction:column;gap:2px">
+        <div style="height:30px;display:flex;align-items:center;gap:10px;padding:0 10px"><span style="width:9px;height:9px;border-radius:50%;background:#2dd4bf"></span><span style="font-size:13px;font-weight:500">You</span><span style="margin-left:auto;font-size:11px;color:#3fb950">Online</span></div>
+        <div style="height:30px;display:flex;align-items:center;gap:10px;padding:0 10px"><span style="width:9px;height:9px;border-radius:50%;background:#fb7185"></span><span style="font-size:13px">Alex</span><span style="margin-left:auto;font-size:11px;color:#6ea0ff">Typing…</span></div>
+        <div style="height:30px;display:flex;align-items:center;gap:10px;padding:0 10px"><span style="width:9px;height:9px;border-radius:50%;background:#a78bfa"></span><span style="font-size:13px">Sam</span><span style="margin-left:auto;font-size:11px;color:#3fb950">Online</span></div>
+        <div style="height:30px;display:flex;align-items:center;gap:10px;padding:0 10px"><span style="width:9px;height:9px;border-radius:50%;background:#fbbf24"></span><span style="font-size:13px">Mia</span><span style="margin-left:auto;font-size:11px;color:#e3b341">Idle</span></div>
+        <div style="height:1px;background:#1f1f1f;margin:6px 10px"></div>
+        <div style="height:30px;display:flex;align-items:center;gap:10px;padding:0 10px"><span style="width:9px;height:9px;border-radius:50%;background:#6b6b6b"></span><span style="font-size:13px;color:#a0a0a0">Guest #1</span><span style="margin-left:auto;font-size:11px;color:#3fb950">Online</span></div>
+        <div style="height:30px;display:flex;align-items:center;gap:10px;padding:0 10px"><span style="width:9px;height:9px;border-radius:50%;background:#6b6b6b"></span><span style="font-size:13px;color:#a0a0a0">Guest #2</span><span style="margin-left:auto;font-size:11px;color:#3fb950">Online</span></div>
+      </div>
+    </div>
+
+    <!-- AI locked panel -->
+    <div style="width:280px;height:520px;background:#111111;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;color:#e8e8e8;position:relative">
+      <div style="height:36px;flex-shrink:0;display:flex;align-items:stretch;border-bottom:1px solid #1f1f1f">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6b6b;border-bottom:2px solid transparent">Chat</div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b6b6b;border-bottom:2px solid transparent">Members</div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;font-size:13px;color:#e8e8e8;border-bottom:2px solid #3e7bfa">AI
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#e8e8e8" stroke-width="2.2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        </div>
+      </div>
+      <!-- dim preview underneath -->
+      <div style="flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:12px;opacity:0.28;filter:grayscale(0.4)">
+        <div style="display:flex;gap:8px"><div style="width:22px;height:22px;border-radius:6px;background:#3e7bfa;flex-shrink:0"></div><div style="background:#161616;border:1px solid #1f1f1f;border-radius:8px;padding:8px 10px;font-size:12px;color:#a0a0a0;line-height:1.4">This function broadcasts cursor events to every connected peer in the room.</div></div>
+        <div style="display:flex;gap:8px;flex-direction:row-reverse"><div style="background:#1c2a44;border-radius:8px;padding:8px 10px;font-size:12px;color:#c4c4c4">explain line 10</div></div>
+        <div style="display:flex;gap:8px"><div style="width:22px;height:22px;border-radius:6px;background:#3e7bfa;flex-shrink:0"></div><div style="background:#161616;border:1px solid #1f1f1f;border-radius:8px;padding:8px 10px;font-size:12px;color:#a0a0a0;line-height:1.4">broadcast() serializes the payload and pushes it over the WebSocket channel.</div></div>
+        <div style="margin-top:auto;background:#0d0d0d;border:1px solid #1f1f1f;border-radius:8px;padding:8px 10px;font-size:12px;color:#6b6b6b">Ask about your code…</div>
+      </div>
+      <!-- lock overlay -->
+      <div style="position:absolute;inset:36px 0 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(10,10,10,0.72);padding:0 32px">
+        <div style="width:44px;height:44px;border:1px solid #2e2e2e;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#151515">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        </div>
+        <div style="text-align:center"><div style="font-size:14px;font-weight:600;color:#e8e8e8;margin-bottom:4px">Login to use AI assistance</div><div style="font-size:12px;color:#6b6b6b;line-height:1.4">Get code explanations, fixes, and refactors inline.</div></div>
+        <button style="background:#3e7bfa;border:none;color:#fff;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:6px;cursor:pointer">Login to continue</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s1" style="display:flex;flex-direction:column;gap:10px;padding:8px 4px 28px">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#3e7bfa;font-weight:600">SCREEN 1</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b">HOME / LANDING — default &amp; join-room states</span>
+  </div>
+
+  <div style="display:flex;gap:20px;align-items:flex-start">
+
+    <!-- Variant A: default -->
+    <div style="width:710px;height:520px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;position:relative;display:flex;flex-direction:column;color:#e8e8e8">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(#141414 1px,transparent 1px),linear-gradient(90deg,#141414 1px,transparent 1px);background-size:44px 44px;opacity:0.4"></div>
+      <div style="position:relative;height:48px;flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:8px">
+        <div style="width:16px;height:16px;background:#3e7bfa;border-radius:4px;display:flex;align-items:center;justify-content:center"><div style="width:6px;height:6px;background:#0a0a0a;border-radius:1px"></div></div>
+        <span style="font-size:14px;font-weight:600;letter-spacing:-0.01em">CodeSync</span>
+      </div>
+      <div style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:0 40px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:#6b6b6b;margin-bottom:20px">NO ACCOUNT NEEDED</div>
+        <h1 style="font-size:44px;font-weight:600;letter-spacing:-0.025em;margin:0;text-align:center;line-height:1.05">Code together, instantly.</h1>
+        <p style="font-size:16px;color:#a0a0a0;margin:16px 0 32px;text-align:center;line-height:1.5">No account needed. Create a room and share the link.</p>
+        <div style="display:flex;gap:12px">
+          <button style="background:#3e7bfa;border:1px solid #3e7bfa;color:#fff;font-family:'Geist',sans-serif;font-size:14px;font-weight:500;padding:10px 22px;border-radius:6px;cursor:pointer">Create Room</button>
+          <button style="background:transparent;border:1px solid #2e2e2e;color:#e8e8e8;font-family:'Geist',sans-serif;font-size:14px;font-weight:500;padding:10px 22px;border-radius:6px;cursor:pointer">Join Room</button>
+        </div>
+      </div>
+      <div style="position:relative;flex-shrink:0;padding:20px;display:flex;justify-content:center">
+        <span style="font-size:13px;color:#6b6b6b">Login to save your projects and use AI assistance <span style="color:#6ea0ff">→</span></span>
+      </div>
+    </div>
+
+    <!-- Variant B: join input open -->
+    <div style="width:710px;height:520px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;position:relative;display:flex;flex-direction:column;color:#e8e8e8">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(#141414 1px,transparent 1px),linear-gradient(90deg,#141414 1px,transparent 1px);background-size:44px 44px;opacity:0.4"></div>
+      <div style="position:relative;height:48px;flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:8px">
+        <div style="width:16px;height:16px;background:#3e7bfa;border-radius:4px;display:flex;align-items:center;justify-content:center"><div style="width:6px;height:6px;background:#0a0a0a;border-radius:1px"></div></div>
+        <span style="font-size:14px;font-weight:600;letter-spacing:-0.01em">CodeSync</span>
+      </div>
+      <div style="position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 40px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:#6b6b6b;margin-bottom:20px">NO ACCOUNT NEEDED</div>
+        <h1 style="font-size:44px;font-weight:600;letter-spacing:-0.025em;margin:0;text-align:center;line-height:1.05">Code together, instantly.</h1>
+        <p style="font-size:16px;color:#a0a0a0;margin:16px 0 32px;text-align:center;line-height:1.5">No account needed. Create a room and share the link.</p>
+        <div style="display:flex;gap:12px;margin-bottom:16px">
+          <button style="background:#3e7bfa;border:1px solid #3e7bfa;color:#fff;font-family:'Geist',sans-serif;font-size:14px;font-weight:500;padding:10px 22px;border-radius:6px;cursor:pointer">Create Room</button>
+          <button style="background:#151515;border:1px solid #3e7bfa;color:#e8e8e8;font-family:'Geist',sans-serif;font-size:14px;font-weight:500;padding:10px 22px;border-radius:6px;cursor:pointer">Join Room</button>
+        </div>
+        <div style="display:flex;gap:8px;width:340px">
+          <div style="flex:1;display:flex;align-items:center;background:#0d0d0d;border:1px solid #3e7bfa;border-radius:6px;padding:9px 12px;box-shadow:0 0 0 3px rgba(62,123,250,0.15)">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#e8e8e8;letter-spacing:1px">abc-123-<span style="color:#6b6b6b">___</span></span>
+            <span style="width:1.5px;height:16px;background:#3e7bfa;margin-left:1px"></span>
+          </div>
+          <button style="background:#151515;border:1px solid #2e2e2e;color:#e8e8e8;font-family:'Geist',sans-serif;font-size:14px;font-weight:500;padding:0 18px;border-radius:6px;cursor:pointer">Join</button>
+        </div>
+        <div style="font-size:11px;color:#6b6b6b;font-family:'JetBrains Mono',monospace;margin-top:10px">Enter the room code from your invite link</div>
+      </div>
+      <div style="position:relative;flex-shrink:0;padding:20px;display:flex;justify-content:center">
+        <span style="font-size:13px;color:#6b6b6b">Login to save your projects and use AI assistance <span style="color:#6ea0ff">→</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s3" style="display:flex;flex-direction:column;gap:10px;padding:8px 4px 28px">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#3e7bfa;font-weight:600">SCREEN 3</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b">LOGIN</span>
+  </div>
+  <div style="width:820px;height:560px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;color:#e8e8e8">
+    <div style="position:absolute;inset:0;background-image:linear-gradient(#141414 1px,transparent 1px),linear-gradient(90deg,#141414 1px,transparent 1px);background-size:44px 44px;opacity:0.35"></div>
+    <div style="position:absolute;top:20px;left:20px;display:flex;align-items:center;gap:8px">
+      <div style="width:16px;height:16px;background:#3e7bfa;border-radius:4px;display:flex;align-items:center;justify-content:center"><div style="width:6px;height:6px;background:#0a0a0a;border-radius:1px"></div></div>
+      <span style="font-size:14px;font-weight:600;letter-spacing:-0.01em">CodeSync</span>
+    </div>
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:18px">
+      <div style="width:380px;background:#101010;border:1px solid #1f1f1f;border-radius:10px;padding:28px">
+        <h2 style="font-size:20px;font-weight:600;margin:0 0 8px;letter-spacing:-0.01em">Sign in to CodeSync</h2>
+        <p style="font-size:13px;color:#a0a0a0;margin:0 0 24px;line-height:1.5">Save your projects, access version history, and use AI assistance.</p>
+        <button style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:none;color:#1a1a1a;font-family:'Geist',sans-serif;font-size:14px;font-weight:500;padding:11px;border-radius:6px;cursor:pointer">
+          <svg width="17" height="17" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1Z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.22V7.04H2.18a11 11 0 0 0 0 9.9l3.66-2.84Z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.04l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38Z"/></svg>
+          Continue with Google
+        </button>
+        <div style="display:flex;align-items:center;gap:12px;margin:20px 0">
+          <div style="flex:1;height:1px;background:#1f1f1f"></div>
+          <span style="font-size:12px;color:#6b6b6b">or</span>
+          <div style="flex:1;height:1px;background:#1f1f1f"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;opacity:0.55">
+          <input placeholder="you@company.com" style="width:100%;background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;padding:10px 12px;color:#e8e8e8;font-family:'Geist',sans-serif;font-size:13px;outline:none" />
+          <button style="width:100%;background:#151515;border:1px solid #2e2e2e;color:#a0a0a0;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:10px;border-radius:6px;cursor:not-allowed;display:flex;align-items:center;justify-content:center;gap:8px">Continue with email <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6b6b6b;border:1px solid #2e2e2e;border-radius:3px;padding:1px 5px">SOON</span></button>
+        </div>
+      </div>
+      <span style="font-size:13px;color:#6b6b6b">No account? You can still collaborate anonymously <span style="color:#6ea0ff">→</span></span>
+    </div>
+  </div>
+</section>
+
+<section id="s4" style="display:flex;flex-direction:column;gap:10px;padding:8px 4px 28px">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#3e7bfa;font-weight:600">SCREEN 4</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b">DASHBOARD — authenticated user</span>
+  </div>
+  <div style="width:1280px;height:720px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;color:#e8e8e8">
+    <!-- navbar -->
+    <div style="height:40px;flex-shrink:0;background:#0c0c0c;border-bottom:1px solid #1f1f1f;display:flex;align-items:center;padding:0 16px;gap:10px">
+      <div style="width:16px;height:16px;background:#3e7bfa;border-radius:4px;display:flex;align-items:center;justify-content:center"><div style="width:6px;height:6px;background:#0c0c0c;border-radius:1px"></div></div>
+      <span style="font-size:13px;font-weight:600;letter-spacing:-0.01em">CodeSync</span>
+      <div style="flex:1"></div>
+      <button style="display:flex;align-items:center;gap:6px;background:#3e7bfa;border:none;color:#fff;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:5px 12px;border-radius:6px;cursor:pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Project</button>
+      <div style="width:26px;height:26px;border-radius:50%;background:#2dd4bf;color:#062822;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-left:4px">JD</div>
+    </div>
+    <div style="flex:1;display:flex;min-height:0">
+      <!-- sidebar -->
+      <div style="width:220px;flex-shrink:0;background:#111111;border-right:1px solid #1f1f1f;padding:12px 6px">
+        <div style="padding:0 8px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;color:#6b6b6b;font-weight:600">MY PROJECTS</div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="height:32px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:6px;background:#1c1c1c;border-left:2px solid #3e7bfa"><span style="width:8px;height:8px;background:#f0db4f;border-radius:2px"></span><span style="font-size:13px">sync-engine</span></div>
+          <div style="height:32px;display:flex;align-items:center;gap:8px;padding:0 10px;border-radius:6px;color:#a0a0a0"><span style="width:8px;height:8px;background:#3572A5;border-radius:2px"></span><span style="font-size:13px">data-pipeline</span></div>
+          <div style="height:32px;display:flex;align-items:center;gap:8px;padding:0 10px;border-radius:6px;color:#a0a0a0"><span style="width:8px;height:8px;background:#e34c26;border-radius:2px"></span><span style="font-size:13px">portfolio-site</span></div>
+          <div style="height:32px;display:flex;align-items:center;gap:8px;padding:0 10px;border-radius:6px;color:#a0a0a0"><span style="width:8px;height:8px;background:#8250df;border-radius:2px"></span><span style="font-size:13px">game-of-life</span></div>
+        </div>
+      </div>
+      <!-- main -->
+      <div style="flex:1;padding:24px;overflow:hidden">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px">
+          <h2 style="font-size:18px;font-weight:600;margin:0;letter-spacing:-0.01em">Projects</h2>
+          <span style="font-size:12px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">4 projects</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+
+          <div style="background:#121212;border:1px solid #1f1f1f;border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:14px;position:relative">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between"><span style="font-size:14px;font-weight:600">sync-engine</span><svg width="16" height="16" viewBox="0 0 24 24" fill="#6b6b6b"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:500;color:#f0db4f;background:rgba(240,219,79,0.1);border:1px solid rgba(240,219,79,0.2);padding:2px 8px;border-radius:20px">JavaScript</span><span style="font-size:11px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">3 files</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#6b6b6b">Edited 2h ago</span></div>
+          </div>
+
+          <!-- hovered card -->
+          <div style="background:#161616;border:1px solid #2e2e2e;border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:14px;position:relative">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between"><span style="font-size:14px;font-weight:600">data-pipeline</span><svg width="16" height="16" viewBox="0 0 24 24" fill="#a0a0a0"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:500;color:#6ea0ff;background:rgba(53,114,165,0.15);border:1px solid rgba(53,114,165,0.3);padding:2px 8px;border-radius:20px">Python</span><span style="font-size:11px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">7 files</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#6b6b6b">Edited yesterday</span><button style="background:#3e7bfa;border:none;color:#fff;font-family:'Geist',sans-serif;font-size:12px;font-weight:500;padding:4px 12px;border-radius:5px;cursor:pointer">Open</button></div>
+          </div>
+
+          <div style="background:#121212;border:1px solid #1f1f1f;border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:14px;position:relative">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between"><span style="font-size:14px;font-weight:600">portfolio-site</span><svg width="16" height="16" viewBox="0 0 24 24" fill="#6b6b6b"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:500;color:#f0866b;background:rgba(227,76,38,0.12);border:1px solid rgba(227,76,38,0.25);padding:2px 8px;border-radius:20px">HTML</span><span style="font-size:11px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">12 files</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#6b6b6b">Edited 3d ago</span></div>
+          </div>
+
+          <div style="background:#121212;border:1px solid #1f1f1f;border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:14px;position:relative">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between"><span style="font-size:14px;font-weight:600">game-of-life</span><svg width="16" height="16" viewBox="0 0 24 24" fill="#6b6b6b"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:500;color:#b892ff;background:rgba(130,80,223,0.14);border:1px solid rgba(130,80,223,0.28);padding:2px 8px;border-radius:20px">C++</span><span style="font-size:11px;color:#6b6b6b;font-family:'JetBrains Mono',monospace">5 files</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#6b6b6b">Edited last week</span></div>
+          </div>
+
+        </div>
+
+        <!-- empty state -->
+        <div style="margin-top:24px;border:1px dashed #2e2e2e;border-radius:8px;padding:36px;display:flex;flex-direction:column;align-items:center;gap:12px;background:#0c0c0c">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;color:#6b6b6b">EMPTY STATE</div>
+          <div style="font-size:14px;color:#a0a0a0">No projects yet. Create a room and save your first project.</div>
+          <button style="background:#3e7bfa;border:none;color:#fff;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border-radius:6px;cursor:pointer">Create a room</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ds" style="display:flex;flex-direction:column;gap:14px;padding:8px 4px 40px">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#3e7bfa;font-weight:600">DESIGN SYSTEM</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b">TOKENS &amp; COMPONENTS — every value is explicit</span>
+  </div>
+
+  <div style="width:1280px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:8px;padding:28px;display:flex;flex-direction:column;gap:32px;color:#e8e8e8">
+
+    <!-- SURFACES -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b;font-weight:600;margin-bottom:14px;border-bottom:1px solid #1f1f1f;padding-bottom:8px">SURFACES &amp; BORDERS</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px">
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">App background</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#0A0A0A</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#111111;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">Surface / panel</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#111111</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">Editor</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#0D0D0D</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#0c0c0c;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">Top bar</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#0C0C0C</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#0f0f0f;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">Tab bar</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#0F0F0F</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#121212;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">Card</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#121212</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#1a1a1a;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">Hover</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#1A1A1A</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#1c1c1c;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">Active / selected</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#1C1C1C</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:6px"></div><div><div style="font-size:12px">Border default</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#1F1F1F</div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#0a0a0a;border:1px solid #2e2e2e;border-radius:6px"></div><div><div style="font-size:12px">Border strong</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#2E2E2E</div></div></div>
+      </div>
+    </div>
+
+    <!-- TEXT + ACCENTS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b;font-weight:600;margin-bottom:14px;border-bottom:1px solid #1f1f1f;padding-bottom:8px">TEXT</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;color:#e8e8e8">Primary — code &amp; main content</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#E8E8E8</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;color:#a0a0a0">Secondary — labels, metadata</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#A0A0A0</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;color:#6b6b6b">Muted — placeholders, disabled</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#6B6B6B</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;color:#6ea0ff">Accent — links, active states</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#6EA0FF</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b;font-weight:600;margin-bottom:14px;border-bottom:1px solid #1f1f1f;padding-bottom:8px">ACCENTS</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+          <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#3e7bfa;border-radius:6px"></div><div><div style="font-size:12px">Primary</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#3E7BFA</div></div></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#238636;border-radius:6px"></div><div><div style="font-size:12px">Run / success</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#238636</div></div></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#f85149;border-radius:6px"></div><div><div style="font-size:12px">Danger</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#F85149</div></div></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><div style="height:52px;background:#e3b341;border-radius:6px"></div><div><div style="font-size:12px">Warning</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">#E3B341</div></div></div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b;font-weight:600;margin:18px 0 10px">PRESENCE — CURSOR COLORS</div>
+        <div style="display:flex;gap:10px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:28px;height:28px;border-radius:50%;background:#2dd4bf"></div><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#6b6b6b">2DD4BF</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:28px;height:28px;border-radius:50%;background:#fb7185"></div><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#6b6b6b">FB7185</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:28px;height:28px;border-radius:50%;background:#a78bfa"></div><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#6b6b6b">A78BFA</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:28px;height:28px;border-radius:50%;background:#fbbf24"></div><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#6b6b6b">FBBF24</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:28px;height:28px;border-radius:50%;background:#4ade80"></div><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#6b6b6b">4ADE80</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:28px;height:28px;border-radius:50%;background:#f472b6"></div><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#6b6b6b">F472B6</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TYPE + SPACING -->
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:32px">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b;font-weight:600;margin-bottom:14px;border-bottom:1px solid #1f1f1f;padding-bottom:8px">TYPOGRAPHY</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-family:'Geist',sans-serif;font-weight:600;font-size:15px">Geist — UI font</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">weights 400 / 500 / 600</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-family:'JetBrains Mono',monospace;font-size:14px">JetBrains Mono — code</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">13px / 20px line</span></div>
+          <div style="height:1px;background:#1f1f1f;margin:2px 0"></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#a0a0a0;font-size:13px">Top bar labels</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">13px · 500</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#a0a0a0;font-size:13px">Sidebar items</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">13px · 400/500</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#a0a0a0;font-size:13px">Tab labels</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">13px · 400</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#a0a0a0;font-size:13px">Section headers</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">11px · 600 · +1px</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#a0a0a0;font-size:13px">Button text</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">13–14px · 500</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#a0a0a0;font-size:13px">Chat / body</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b6b">13px · 400</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b;font-weight:600;margin-bottom:14px;border-bottom:1px solid #1f1f1f;padding-bottom:8px">SPACING &amp; BORDERS</div>
+        <div style="display:flex;flex-direction:column;gap:11px;font-size:13px;color:#a0a0a0">
+          <div style="display:flex;justify-content:space-between"><span>Top bar height</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">40px</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Tab height</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">36px</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Sidebar row height</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">30px</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Bottom panel default</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">200px</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Panel padding</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">12px</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Gap between rows</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">2px</span></div>
+          <div style="height:1px;background:#1f1f1f;margin:2px 0"></div>
+          <div style="display:flex;justify-content:space-between"><span>Radius — button / input</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">6px</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Radius — card</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">8px</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Radius — avatar</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">50%</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Border width — separators</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8e8e8">1px</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPONENTS -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#6b6b6b;font-weight:600;margin-bottom:16px;border-bottom:1px solid #1f1f1f;padding-bottom:8px">COMPONENTS</div>
+      <div style="display:flex;flex-direction:column;gap:22px">
+
+        <!-- buttons -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:12px;color:#6b6b6b">Buttons</span>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button style="background:#3e7bfa;border:1px solid #3e7bfa;color:#fff;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:6px;cursor:pointer">Primary</button>
+            <button style="background:transparent;border:1px solid #2e2e2e;color:#e8e8e8;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:6px;cursor:pointer">Secondary</button>
+            <button style="background:transparent;border:1px solid transparent;color:#a0a0a0;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:6px;cursor:pointer">Ghost</button>
+            <button style="background:#f85149;border:1px solid #f85149;color:#fff;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:6px;cursor:pointer">Danger</button>
+            <button style="background:#111;border:1px solid #1f1f1f;color:#6b6b6b;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:6px;cursor:not-allowed">Disabled</button>
+            <button style="background:#3e7bfa;border:1px solid #3e7bfa;color:#fff;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:6px;cursor:progress;display:flex;align-items:center;gap:7px;opacity:0.85"><span style="width:11px;height:11px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;display:inline-block"></span>Loading</button>
+          </div>
+        </div>
+
+        <!-- inputs -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:12px;color:#6b6b6b">Inputs</span>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <div style="width:200px;background:#0d0d0d;border:1px solid #1f1f1f;border-radius:6px;padding:8px 11px;font-size:13px;color:#6b6b6b">Default</div>
+            <div style="width:200px;background:#0d0d0d;border:1px solid #3e7bfa;border-radius:6px;padding:8px 11px;font-size:13px;color:#e8e8e8;box-shadow:0 0 0 3px rgba(62,123,250,0.15);display:flex;align-items:center">Focus<span style="width:1.5px;height:15px;background:#3e7bfa;margin-left:1px"></span></div>
+            <div style="width:200px;background:#0d0d0d;border:1px solid #f85149;border-radius:6px;padding:8px 11px;font-size:13px;color:#e8e8e8;box-shadow:0 0 0 3px rgba(248,81,73,0.15)">Error</div>
+          </div>
+        </div>
+
+        <!-- badges -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:12px;color:#6b6b6b">Language badges</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:500;color:#f0db4f;background:rgba(240,219,79,0.1);border:1px solid rgba(240,219,79,0.2);padding:3px 10px;border-radius:20px">JavaScript · #F0DB4F</span>
+            <span style="font-size:11px;font-weight:500;color:#6ea0ff;background:rgba(53,114,165,0.15);border:1px solid rgba(53,114,165,0.3);padding:3px 10px;border-radius:20px">Python · #3572A5</span>
+            <span style="font-size:11px;font-weight:500;color:#e0a44e;background:rgba(176,114,25,0.15);border:1px solid rgba(176,114,25,0.3);padding:3px 10px;border-radius:20px">Java · #B07219</span>
+            <span style="font-size:11px;font-weight:500;color:#b892ff;background:rgba(130,80,223,0.14);border:1px solid rgba(130,80,223,0.28);padding:3px 10px;border-radius:20px">C++ · #8250DF</span>
+            <span style="font-size:11px;font-weight:500;color:#f0866b;background:rgba(227,76,38,0.12);border:1px solid rgba(227,76,38,0.25);padding:3px 10px;border-radius:20px">HTML · #E34C26</span>
+            <span style="font-size:11px;font-weight:500;color:#6ea0ff;background:rgba(41,101,241,0.15);border:1px solid rgba(41,101,241,0.3);padding:3px 10px;border-radius:20px">CSS · #2965F1</span>
+          </div>
+        </div>
+
+        <!-- presence dots + tabs -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;color:#6b6b6b">Presence status</span>
+            <div style="display:flex;gap:20px;align-items:center">
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:#3fb950"></span><span style="font-size:13px">Online</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:#e3b341"></span><span style="font-size:13px">Idle</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:#6b6b6b"></span><span style="font-size:13px;color:#a0a0a0">Offline</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;color:#6b6b6b">Tabs</span>
+            <div style="display:flex;align-items:stretch;background:#0f0f0f;border:1px solid #1f1f1f;border-radius:6px;overflow:hidden;height:34px;width:fit-content">
+              <div style="display:flex;align-items:center;padding:0 16px;font-size:13px;color:#e8e8e8;background:#0d0d0d;border-top:2px solid #3e7bfa">Active</div>
+              <div style="display:flex;align-items:center;padding:0 16px;font-size:13px;color:#6b6b6b;border-left:1px solid #1f1f1f">Inactive</div>
+              <div style="display:flex;align-items:center;padding:0 16px;font-size:13px;color:#e8e8e8;background:#1a1a1a;border-left:1px solid #1f1f1f">Hover</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+</body>
+</html>
