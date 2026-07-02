@@ -1,7 +1,7 @@
 // Axios instance with auth interceptor
 import axios from 'axios'
+import { BACKEND_URL } from '../config'
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || ''
 const client = axios.create({ baseURL: `${BACKEND_URL}/api` })
 
 client.interceptors.request.use((config) => {

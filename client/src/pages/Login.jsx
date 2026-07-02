@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../api/client'
 import { useAuth } from '../context/AuthContext'
+import { BACKEND_URL } from '../config'
 
 function GoogleIcon() {
   return (
@@ -123,7 +124,7 @@ function Login() {
           </p>
 
           <a
-            href={`${import.meta.env.VITE_BACKEND_URL || ''}/api/auth/google`}
+            href={`${BACKEND_URL}/api/auth/google`}
             className="font-medium"
             style={{
               width: '100%',

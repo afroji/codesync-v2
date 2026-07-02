@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { io } from 'socket.io-client'
 import { useAuth } from '../context/AuthContext'
 import { CURSOR_COLORS } from '../styles/index.js'
+import { BACKEND_URL } from '../config'
 
 // Duplicated from server/utils/generateGuestName.js — that file is a CJS
 // module meant for the server; this is the small client-side equivalent
@@ -62,8 +63,7 @@ export default function useRoom(roomId) {
   const myColor = myColorRef.current
 
   useEffect(() => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || ''
-    const socket = io(backendUrl || '/', {
+    const socket = io(BACKEND_URL || '/', {
       transports: ['websocket', 'polling'],
       auth: { token: localStorage.getItem('codesync_token') },
     })
