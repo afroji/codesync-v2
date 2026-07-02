@@ -11,6 +11,8 @@ import useSync from '../hooks/useSync'
 import useMetrics from '../hooks/useMetrics'
 import useFileTabs from '../hooks/useFileTabs'
 import RoomLayout from '../components/room/RoomLayout'
+import apiClient from '../api/client'
+import { EXECUTABLE_LANGUAGES } from '../styles/index.js'
 
 function Room() {
   const { roomId } = useParams()
@@ -29,6 +31,7 @@ function Room() {
     addFile,
     deleteFile,
     renameFile,
+    changeLanguage,
   } = useRoom(roomId)
 
   // useFileTabs' own activeTab/setActiveTab are aliased to activeFile/
@@ -62,7 +65,7 @@ function Room() {
 
   // Lifted here (rather than inside EditorPane) because isSyncing needs to
   // reach TopBar too — Room.jsx is the nearest common ancestor of both.
-  const { naiveContent, handleNaiveChange, isSyncing, destroyYDoc, renameYDoc, awarenessRef, awarenessVersion } =
+  const { naiveContent, handleNaiveChange, isSyncing, destroyYDoc, renameYDoc, getCurrentContent, awarenessRef, awarenessVersion } =
     useSync({
       socket,
       roomId,
@@ -80,6 +83,46 @@ function Room() {
     })
 
   const { metrics } = useMetrics(roomId, socket)
+
+  const [isRunning, setIsRunning] = useState(false)
+  const [output, setOutput] = useState(null)
+  const [stdin, setStdin] = useState('')
+
+  const runCode = useCallback(async () => {
+    const activeFileObj = room?.files.find((f) => f.name === activeFile)
+    if (!activeFileObj) return
+
+    if (!EXECUTABLE_LANGUAGES.includes(activeFileObj.language)) {
+      setOutput({ success: false, error: `${activeFileObj.language} cannot be executed` })
+      return
+    }
+
+    // CRDT mode: room.files[].content lags the live Y.Doc by up to
+    // CONTENT_PERSIST_INTERVAL-1 edits (server batches Mongo writes) — read
+    // straight from the open Y.Doc so Run always executes what's actually
+    // in the editor, not a stale persisted snapshot. Naive mode persists
+    // every edit immediately, so activeFileObj.content is already current;
+    // getCurrentContent returns undefined for it and this just falls
+    // through to that.
+    const code = getCurrentContent(activeFile) ?? activeFileObj.content
+
+    setIsRunning(true)
+    setOutput({ running: true })
+
+    try {
+      const response = await apiClient.post('/execute', {
+        code,
+        language: activeFileObj.language,
+        stdin,
+        roomId: room.roomId,
+      })
+      setOutput(response.data.data)
+    } catch (err) {
+      setOutput({ success: false, error: err.response?.data?.error || 'Execution failed' })
+    } finally {
+      setIsRunning(false)
+    }
+  }, [room, activeFile, stdin, getCurrentContent])
 
   // File add/delete/rename land in room.files via useRoom's own listeners
   // (so LeftSidebar/EditorPane always see the current file list); these
@@ -205,6 +248,12 @@ function Room() {
       newFileModalOpen={newFileModalOpen}
       onCloseNewFileModal={handleCloseModal}
       onCreateFile={handleCreateFile}
+      changeLanguage={changeLanguage}
+      runCode={runCode}
+      isRunning={isRunning}
+      output={output}
+      stdin={stdin}
+      setStdin={setStdin}
     />
   )
 }

@@ -37,3 +37,25 @@ export const LANGUAGE_DOT_COLORS = {
   markdown: '#083fa1',
   plaintext: '#6b6b6b',
 }
+
+// Full language list for the TopBar dropdown + which ones the Run button
+// can actually execute (Day 12 — matches server/services/piston.js's
+// PISTON_LANGUAGES / JDOODLE_LANGUAGES keys exactly; HTML/CSS/JSON/
+// Markdown/Plain Text have no runtime, so they're listed but not
+// executable — a live preview for HTML/CSS is explicitly out of scope,
+// see paper-notes.md Day 12).
+export const LANGUAGE_OPTIONS = [
+  { value: 'javascript', label: 'JavaScript', executable: true },
+  { value: 'typescript', label: 'TypeScript', executable: true },
+  { value: 'python', label: 'Python', executable: true },
+  { value: 'java', label: 'Java', executable: true },
+  { value: 'c', label: 'C', executable: true },
+  { value: 'cpp', label: 'C++', executable: true },
+  { value: 'html', label: 'HTML', executable: false },
+  { value: 'css', label: 'CSS', executable: false },
+  { value: 'json', label: 'JSON', executable: false },
+  { value: 'markdown', label: 'Markdown', executable: false },
+  { value: 'plaintext', label: 'Plain Text', executable: false },
+]
+
+export const EXECUTABLE_LANGUAGES = LANGUAGE_OPTIONS.filter((l) => l.executable).map((l) => l.value)

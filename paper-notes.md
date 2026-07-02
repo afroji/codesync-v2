@@ -1142,7 +1142,322 @@ tab close, is what makes "switching tabs never loses or staleness
 edits" true rather than true-until-someone-else-types-in-a-file-
 you're-not-looking-at.
 
-### Day 12 —
+### Day 12 — Language support + code execution (Piston → JDoodle, then flipped)
+
+Wired the Run button and made the language dropdown real. Before
+writing any code, checked the task's core assumption — Piston's public
+API being free/no-key, per CLAUDE.md's tech stack section — against
+the live service, since Day 9-11 all found stale version strings or
+API misreadings in provided pseudocode and this felt worth the same
+scrutiny. It was worse than stale: POST /api/v2/piston/execute now
+returns "Public Piston API is now whitelist only as of 2/15/2026.
+Please contact EngineerMan on Discord..." for every language, while
+GET /runtimes still works openly. Piston went from "the primary
+executor" to "structurally unusable without a whitelisted key" between
+when this project's stack was chosen and today. Flagged this to the
+user directly rather than silently coding around it or quietly
+shipping something unverifiable — the options were self-hosting
+Piston via Docker, getting real JDoodle credentials, or writing
+everything against mocks. User chose JDoodle, then added real
+clientId/clientSecret to .env personally partway through the session
+(I can't create third-party accounts on someone's behalf). Piston
+stayed fully implemented as the coded fallback — flipping the primary/
+fallback order back is a few-line change in services/piston.js if this
+project ever gets whitelisted or self-hosts.
+
+What was built: services/piston.js (executeWithJDoodle primary,
+executeWithPiston fallback, executeCode never throws — always
+resolves to a result object so the route never needs its own try/
+catch around execution), routes/execution.js (POST /api/execute,
+unauthenticated, 10 req/min per-IP in-memory rate limit, defense-in-
+depth pattern rejection scoped to require('child_process') only),
+execLatencies added to SessionMetrics, a Piston-reachability check on
+server startup (kept, since /runtimes is still open and useful as an
+early-warning signal for language/version drift), a working
+change_language socket event + functional TopBar language dropdown
+(11 languages, non-executable ones marked "(preview only)"), and a
+real Run button wired through Room.jsx's runCode to a rebuilt
+BottomPanel with Output/Problems/Stdin tabs.
+
+Five real bugs found before or during implementation, none left in
+by the time this was tested:
+
+1. executeCode's fallback-failure message referenced the first
+   provider's caught error variable from inside the SECOND catch
+   block's scope — a catch-clause binding (catch (pistonErr) { ... })
+   only exists inside its own braces. Referencing it from a sibling
+   catch block would throw ReferenceError: pistonErr is not defined
+   at the exact moment BOTH providers failed — the one case this
+   error message exists to describe. Fixed by hoisting both error
+   variables to the function's outer scope before either try/catch
+   runs, assigning them inside each catch instead of relying on
+   catch-clause block scope.
+
+2. Both executeWithPiston and executeWithJDoodle's original draft
+   RETURNED a {success:false} object for an unsupported language
+   instead of throwing. Since executeCode does `return await
+   executeWithX(...)`, a returned (non-thrown) failure short-circuits
+   the whole function immediately — it would never attempt the OTHER
+   provider, even if that provider's language map actually supported
+   it. Fixed by having both functions throw consistently for every
+   failure mode, so any failure — unsupported language, network
+   error, missing credentials — correctly falls through to the other
+   provider.
+
+3. Piston's response for compiled languages (Java/C/C++) can fail at
+   the compile stage before a `run` object even exists, but Piston
+   still returns HTTP 200 — the original draft only ever read
+   `result.run`, which would silently render as a blank successful
+   run instead of showing the compiler's actual error. Fixed by
+   checking `result.compile.code` first and surfacing compile.stderr
+   when it's non-zero. (Not yet re-verified live against Piston
+   itself, since /execute is blocked — verified the equivalent JDoodle
+   failure path instead, see #5.)
+
+4. The JDoodle language map's versionIndex values were guesses (the
+   task's own draft used '4'/'5'/'1' with no stated source; I couldn't
+   find a complete published table either — JDoodle's docs page only
+   partially render without JS). Once real credentials existed, I
+   tested empirically rather than trust either set of guesses:
+   versionIndex '0' for python3 turned out to be an old interpreter
+   that rejects f-strings — `print(f"Hello, {name}!")` came back as
+   SyntaxError: invalid syntax. versionIndex '1' through at least '4'
+   all handle modern syntax correctly; switched to '1'. javascript
+   (nodejs) '0' and java '0' were confirmed working via real compiled/
+   interpreted runs. c, cpp17, and typescript versionIndex '0' remain
+   UNVERIFIED — JDoodle's 200-executions/day free-tier quota was
+   exhausted by this session's own testing (see below) before they
+   could be checked; flagged clearly in the code comment as the first
+   thing to check if C/C++/TS execution ever fails.
+
+5. The original plan for JDoodle's stdout/stderr split was "JDoodle
+   doesn't separate them, put everything in stdout" — technically
+   true of the documented fields, but it meant Test 7 (syntax errors
+   should show in a red STDERR section) would always fail, since
+   errors would render as ordinary stdout. A live syntax-error request
+   during testing surfaced `isExecutionSuccess: false` in JDoodle's
+   response — a real field, present on every response, not mentioned
+   anywhere in JDoodle's own docs. That's precise enough to route the
+   whole output blob to stderr instead of stdout when a run actually
+   failed. Better than the keyword-heuristic ("does the output contain
+   the word Error") I was about to fall back to, which would have
+   false-positived on any program that legitimately prints the word
+   "Error" as normal output.
+
+Verification note: this is the first day this session where real
+external paid-tier-adjacent services (not just this project's own
+server) were in the loop, and it showed — verification was real
+end-to-end execution against JDoodle for as long as the free quota
+allowed, then confirmed structurally once it ran out:
+- JavaScript (Test 1): real POST /api/execute, stdout
+  "Hello from CodeSync!\n4", exit code 0, durationMs 1722 (server-side
+  measured) / 1748ms wall clock from the test client.
+- Python (Test 2): stdout "Hello from Python!", exit 0,
+  durationMs 2130.
+- Java (Test 3): stdout "Hello from Java!", exit 0, durationMs 2330 —
+  matches the task's own expectation of "~2-3s to compile" almost
+  exactly; this is the real number, not an estimate, and is worth
+  citing in the paper's Implementation section as the actual observed
+  compile+run latency for a compiled language through this pipeline.
+- Error output (Test 7, indirectly): a real syntax error
+  (`def broken(:`) came back with isExecutionSuccess:false and the
+  interpreter's actual SyntaxError text — confirms the bug-5 fix's
+  premise against real data, though the POST-fix route-level render-to-
+  stderr behavior needs a final live re-check once quota resets (logic
+  is correct per the raw JDoodle response already observed; the fix
+  landed after the quota ran out for a full round-trip re-test).
+- Language change sync (Test 5): scripted two-user socket test — Bob
+  received language_changed for main.js -> python with the correct
+  fileName/language, confirming the socket layer independent of any
+  execution backend.
+- Rate limiting (Test 6): 11 rapid POST /api/execute calls from one
+  IP returned 200 x9, 429 x2 — not "10 then 1", because one prior
+  request earlier in the same test run had already consumed a slot in
+  that IP's 60s window; total requests against the limit (10) still
+  lines up exactly. Confirms the limiter counts correctly across
+  calls, not just within a single burst.
+- execLatencies in SessionMetrics (Test 8): directly queried Mongo
+  after one POST /api/execute — a real entry appeared:
+  {value: 1768, timestamp: ..., language: "javascript"} — and,
+  importantly, this was recorded even though the execution itself
+  failed (JDoodle quota exhausted + Piston whitelisted at that exact
+  moment), confirming latency is tracked for the request/response
+  cycle regardless of execution outcome, matching the metric's actual
+  purpose (measuring the execution pipeline's responsiveness, not
+  grading whether the user's code was correct).
+- What's NOT independently re-verified end-to-end after the versionIndex/
+  isExecutionSuccess fixes: Java/stdin/C/C++/TypeScript through the full
+  route (blocked by JDoodle's free-tier daily quota, confirmed exhausted
+  via a live "Daily limit reached" / statusCode 429 response near the
+  end of this session — the two-tier fallback then correctly attempted
+  Piston too, which correctly also failed, and the combined error
+  message named both reasons instead of throwing the bug-1 scoping
+  error). Piston itself remains unverified end-to-end for any language
+  (whitelist-blocked) — verified only via /runtimes and the exact-
+  version-match startup check.
+
+Why a two-tier fallback architecture, for the paper: resilience against
+exactly what happened today — a third-party free-tier service can
+change its access policy (Piston) or exhaust a quota (JDoodle) with no
+warning, and a single-provider design would mean the Run button simply
+stops working until someone notices and intervenes manually. Chaining
+two independent providers, with executeCode designed so a failure in
+either is caught, logged, and handed to the other rather than
+propagated as an exception, means only a simultaneous outage of BOTH
+(what's currently happening, coincidentally, for unrelated reasons —
+whitelist policy vs. daily quota) takes the feature down. The
+combined error message surfacing BOTH providers' specific failure
+reasons (once bug 1 was fixed) is also what made today's actual outage
+immediately diagnosable instead of a generic "execution failed".
+
+The Y.Doc vs room.files content distinction for execution: runCode
+reads via useSync's getCurrentContent(activeFile), which returns the
+live Y.Text's current string, not room.files[].content. The latter is
+only periodically persisted to MongoDB (every 10th edit, a Day 9
+design decision to avoid the connection-pool saturation Day 8 found)
+— running room.files[].content directly would execute a version of
+the file that's up to 9 edits stale, silently showing output for code
+the user isn't actually looking at anymore. getCurrentContent returns
+undefined for naive-sync-mode files (which persist every edit
+immediately, so there's no lag to correct for), and runCode falls back
+to activeFileObj.content in that case.
+
+Note: HTML/CSS live preview is out of scope, same call the task made
+— correctly, since it's a UI feature orthogonal to the paper's actual
+research contribution (CRDT vs. naive sync), and every hour spent on
+it is an hour not spent on Days 25-26's actual experiments.
+
+### Cursor presence fixes (between Day 12 and Day 13)
+
+Two bugs reported against Day 10's cursor presence feature: (1) only
+the floating name label was visible, no colored cursor line, and (2)
+remote cursors jumped around whenever anyone typed, regardless of
+whether the cursor's actual owner was focused in the editor. Fixed
+both in useSync.js and CursorPresence.jsx.
+
+Root cause of #2, worth stating precisely since the fix depends on
+it: MonacoBinding keeps a LOCAL editor's awareness `selection` field
+in sync with Monaco's actual cursor position — including when that
+position SHIFTS because of a REMOTE edit. If another user inserts
+text before your cursor, Yjs's relative-position math correctly moves
+your cursor's absolute offset to preserve where it logically points —
+that's the whole point of relative positions, and is correct. The bug
+was that ANY resulting awareness change got broadcast, focused or not
+— so a user with the editor sitting unfocused in a background tab
+would still appear to "jump" every time someone else typed near their
+last cursor position, because Monaco silently adjusted their stored
+offset and the old code broadcast that adjustment as if it were a
+real, intentional cursor move.
+
+The task's own fix pseudocode had two real bugs of its own, caught
+before writing anything (matching this session's running practice —
+Day 9 and Day 10 both found similar issues in provided task code):
+
+1. FIX 2's blur handler cleared `awareness.setLocalStateField('cursor',
+   null)`, and PART C's render-skip checked `state.cursor`. Neither
+   field exists anywhere in this codebase — Day 10 already established
+   (and this file's own existing comments say so) that MonacoBinding
+   stores position under `state.selection`, not `state.cursor`. Setting
+   a field nothing reads would compile and run without error while
+   doing precisely nothing — the remote cursor would never actually
+   disappear on blur, silently failing the exact bug this fix exists to
+   solve. Replaced with an explicit `state.focused` boolean that this
+   codebase now owns and manages itself, independent of whatever
+   MonacoBinding does with `selection` — CursorPresence checks
+   `!state.focused` first, before ever touching `state.selection` at all.
+
+2. A genuine interaction bug in the fix's own two parts, not
+   inherited from Day 10: gating the generic awareness 'update'
+   handler on `hasTextFocus()` (PART A) would ALSO gate out the
+   blur-triggered "clear my cursor" broadcast (PART B) — by the exact
+   instant blur fires, hasTextFocus() is already false, so if the
+   clearing broadcast relied on that same generic handler, it would
+   never be sent, and the bug PART B exists to fix (stale cursor after
+   blur) would still happen. Traced through the actual event order
+   before writing code: the blur handler needs to emit its own
+   `focused: false` update DIRECTLY (bypassing the generic gated
+   handler entirely), which is what the task's OWN pseudocode
+   structure already did — just with the wrong field name (see bug 1).
+   Kept that direct-emit structure, fixed the field.
+
+A third issue found only once actually reasoning through this
+project's Day 11 multi-file architecture (which didn't exist when Day
+10 wrote the original cursor code, so the task's pseudocode — written
+against a "one file, one Monaco binding, created once" mental model —
+couldn't have anticipated it): switching between two ALREADY-OPEN tabs
+never fires a Monaco focus event, because the underlying DOM element
+Monaco owns never actually loses focus — only WHICH Y.Doc/awareness is
+bound to it changes. Relying solely on `onDidFocusEditorText` to set
+`focused: true` would leave a newly-activated tab's awareness
+permanently stuck at `focused: false` (or unset) the moment a user
+switches to it without ever blurring — the tab you're actively looking
+at would incorrectly show as unfocused to everyone else. Fixed by
+seeding `focused: true` explicitly whenever the active-binding effect
+runs AND `editor.hasTextFocus()` is already true, not just reactively
+in response to a focus event that may never come.
+
+FIX 1 (colored cursor line): implemented via
+`editor.createDecorationsCollection()` (confirmed via monaco-editor's
+own .d.ts as the current, non-deprecated API — the older
+`deltaDecorations` is explicitly marked `@deprecated` in favor of it)
+with a zero-width range and `beforeContentClassName`, matching the
+task's approach. Found and fixed one more bug in the task's own
+cleanup code here: FIX 1 injects a per-user `<style>` tag keyed by
+`cursor-style-${sanitizedUserId}` (the SANITIZED userId string), but
+PART C's cleanup snippet looked it up by `cursor-style-${clientId}` —
+a Yjs numeric client ID, a completely different namespace from userId.
+That mismatch means cleanup would never find the style element it's
+looking for: every cursor color rule injected during a session would
+leak permanently in `document.head`, and if the same clientId were
+ever reused for a different user (or the same user with a different
+awareness client instance), stale CSS could apply to the wrong colored
+cursor. Fixed by tracking clientId → sanitizedUserId in its own ref
+(`styleKeysRef`) at creation time, so cleanup — keyed by clientId,
+matching the existing widget/decoration maps' convention — can always
+resolve the correct style element regardless of which identifier
+namespace it started from.
+
+Also hardened, not present in the task's draft: awareness state is
+set by remote, unauthenticated clients and relayed by the server
+without validation (documented as intentional back on Day 10 — cursor
+data has no research or persistence value, so it was never worth
+validating). The injected `<style>` tag's content directly interpolates
+`state.user.color`. Using `.textContent` (not `.innerHTML`) on the
+`<style>` element already rules out HTML/script injection, but a
+malicious peer could still send an arbitrary string as `color` and
+inject arbitrary CSS rules into the page. Added a strict hex-color
+regex check before ever using a remote color value in the injected
+stylesheet, falling back to a neutral gray if it doesn't match — cheap,
+directly adjacent to the new code this task added, and consistent with
+CLAUDE.md's instruction to fix insecure code on sight rather than
+propagate an existing pattern (the label widget's inline
+`background: ${color}` has the same underlying exposure and predates
+this fix — flagged here but left alone, since touching it wasn't part
+of this task's actual scope).
+
+Verification note: Monaco's actual decoration rendering and
+`hasTextFocus()` can't be exercised without a browser, so — same
+pattern as every prior cursor/awareness day — verified the
+awareness-protocol layer the fix depends on with two scripted clients
+(real Yjs + y-protocols/awareness + the live server, not mocks):
+confirmed `state.focused` (not `state.cursor`) is exactly what relays
+across the wire and resolves correctly on the receiving side; confirmed
+a real anchor position (inserted at character offset 5) round-trips
+through `Y.createRelativePositionFromTypeIndex` →
+`Y.createAbsolutePositionFromRelativePosition` on a SEPARATE peer's own
+Y.Doc and resolves back to exactly index 5; confirmed toggling
+`focused` from true to false produces the exact state shape
+CursorPresence's `if (!state.focused) return` is written to catch;
+confirmed a user never sees their own userId in their own remote-states
+view. All 8 assertions passed. The Monaco-specific pieces — the visible
+colored line rendering correctly, content widget positioning, and the
+`hasTextFocus()`-driven gating end to end in a real editor — are
+implemented and code-reviewed against the actual Monaco API surface
+(confirmed every referenced method/enum exists in the installed
+monaco-editor@0.55.1 type definitions before writing this) but not
+independently exercised, consistent with this session's standing
+limitation of no browser automation.
+
 ### Day 13 —
 ### Day 14 —
 ### Day 15 —

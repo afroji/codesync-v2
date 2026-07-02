@@ -86,6 +86,17 @@ export default function useSync({
       function handleLocalAwarenessUpdate({ added, updated, removed }) {
         const changed = [...added, ...updated, ...removed]
         if (!changed.includes(awareness.clientID)) return
+        // Remote Y.Doc updates can shift the LOCAL cursor's absolute offset
+        // even while this editor isn't focused (Monaco preserves the
+        // cursor's relative text position when text is inserted before
+        // it) — MonacoBinding reacts to that shift like any other cursor
+        // move and updates awareness accordingly, which would otherwise
+        // broadcast a "cursor move" nobody actually made. Only real,
+        // focused interaction should be broadcast; the explicit
+        // focused:false blur signal (below) is sent directly instead of
+        // through this handler, specifically so this gate doesn't also
+        // swallow that one.
+        if (!editorRef.current?.hasTextFocus()) return
         const update = encodeAwarenessUpdate(awareness, [awareness.clientID])
         socket.emit('awareness_update', { roomId, awarenessUpdate: Array.from(update) })
       }
@@ -183,7 +194,11 @@ export default function useSync({
       yDocsRef.current.set(fileName, entry)
       return entry
     },
-    [socket, roomId, userId, userName, userColor]
+    // editorRef's object identity is stable for the component's whole
+    // lifetime (a useRef from Room.jsx) — listed so the linter can see
+    // handleLocalAwarenessUpdate's editorRef.current read is accounted
+    // for; it never actually changes what this callback needs to close over.
+    [socket, roomId, userId, userName, userColor, editorRef]
   )
 
   // ---------- destroyYDoc: tear down a file's Y.Doc entirely ----------
@@ -218,6 +233,19 @@ export default function useSync({
     [destroyYDoc]
   )
 
+  // ---------- getCurrentContent: live CRDT content for code execution ----------
+  // room.files[].content lags the real Y.Text by up to CONTENT_PERSIST_
+  // INTERVAL-1 edits in CRDT mode (server batches MongoDB writes — see
+  // collab.js) — reading straight from the open Y.Doc is the only way to
+  // get what's actually in the editor right now. Naive mode doesn't have
+  // this gap (every edit persists to Mongo immediately), so there's
+  // nothing to read here for it; the caller falls back to file.content.
+  const getCurrentContent = useCallback((fileName) => {
+    const entry = yDocsRef.current.get(fileName)
+    if (!entry?.ytext) return undefined
+    return entry.ytext.toString()
+  }, [])
+
   // ---------- Switch which file's Y.Doc is bound to Monaco ----------
   useEffect(() => {
     if (syncMode !== 'crdt') return
@@ -241,14 +269,59 @@ export default function useSync({
     awarenessRef.current = entry.awareness
     setAwarenessVersion((v) => v + 1)
 
+    const editor = editorRef.current
+    const awareness = entry.awareness
+
+    // A remote cursor should only be visible while the user whose cursor
+    // it is has actually got the editor focused — otherwise a cursor
+    // just sits wherever it was last, misleadingly implying someone is
+    // still there. state.focused (NOT state.cursor — MonacoBinding
+    // already owns a field called state.selection for actual position;
+    // nothing in this codebase reads a "cursor" field) is this file's own
+    // explicit focus flag, read by CursorPresence to decide whether to
+    // render at all.
+    function handleFocus() {
+      // hasTextFocus() is already true by the time Monaco raises this —
+      // the generic gated handler above (handleLocalAwarenessUpdate)
+      // picks up this local state change and broadcasts it normally, so
+      // there's no need to also emit here.
+      awareness.setLocalStateField('focused', true)
+    }
+
+    function handleBlur() {
+      awareness.setLocalStateField('focused', false)
+      // hasTextFocus() is already false the instant this fires, so the
+      // generic gated handler above would suppress broadcasting this
+      // change (correctly, for every OTHER kind of update) — but this
+      // specific "I just lost focus, stop showing my cursor" signal is
+      // exactly the one that must go out regardless of focus state, so
+      // it's emitted directly here instead of relying on that handler.
+      const update = encodeAwarenessUpdate(awareness, [awareness.clientID])
+      socket.emit('awareness_update', { roomId, awarenessUpdate: Array.from(update) })
+    }
+
+    const focusDisposable = editor.onDidFocusEditorText(handleFocus)
+    const blurDisposable = editor.onDidBlurEditorText(handleBlur)
+
+    // Switching to an already-open tab doesn't fire a focus EVENT — the
+    // <textarea> Monaco owns never actually lost DOM focus, so
+    // onDidFocusEditorText never runs for this newly-bound file's
+    // awareness. Without this, its cursor would incorrectly read as
+    // unfocused to everyone else despite the user actively looking at it.
+    if (editor.hasTextFocus()) {
+      handleFocus()
+    }
+
     return () => {
+      focusDisposable.dispose()
+      blurDisposable.dispose()
       if (bindingRef.current) {
         bindingRef.current.destroy()
         bindingRef.current = null
       }
       boundFileRef.current = null
     }
-  }, [activeFile, syncMode, editorMounted, getOrCreateYDoc, editorRef, monacoRef])
+  }, [activeFile, syncMode, editorMounted, getOrCreateYDoc, editorRef, monacoRef, socket, roomId])
 
   // ---------- Full cleanup on room leave (component unmount) ----------
   useEffect(() => {
@@ -358,6 +431,7 @@ export default function useSync({
     getOrCreateYDoc,
     destroyYDoc,
     renameYDoc,
+    getCurrentContent,
     awarenessRef, // CursorPresence reads this for remote cursor labels — always the CURRENTLY BOUND file's
     awarenessVersion, // bump signal — see comment above
   }

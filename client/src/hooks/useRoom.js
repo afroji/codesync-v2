@@ -140,6 +140,13 @@ export default function useRoom(roomId) {
       setFileError(data.message)
     })
 
+    socket.on('language_changed', ({ fileName, language }) => {
+      setRoom((prev) => {
+        if (!prev) return prev
+        return { ...prev, files: prev.files.map((f) => (f.name === fileName ? { ...f, language } : f)) }
+      })
+    })
+
     socket.on('error', (data) => {
       setError(data.message)
     })
@@ -198,6 +205,13 @@ export default function useRoom(roomId) {
 
   const clearFileError = useCallback(() => setFileError(null), [])
 
+  const changeLanguage = useCallback(
+    (fileName, language) => {
+      socketRef.current?.emit('change_language', { roomId, fileName, language, userId: myUserId })
+    },
+    [roomId, myUserId]
+  )
+
   return {
     room,
     connected,
@@ -213,5 +227,6 @@ export default function useRoom(roomId) {
     addFile,
     deleteFile,
     renameFile,
+    changeLanguage,
   }
 }

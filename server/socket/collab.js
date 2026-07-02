@@ -710,6 +710,31 @@ function initializeSocket(io) {
       }
     });
 
+    /* ── change_language ── */
+    socket.on('change_language', async (data) => {
+      /*
+       * data: { roomId, fileName, language, userId }
+       * Manual override of a file's language (e.g. picking Python from
+       * the dropdown for a file extension detectLanguage() wouldn't have
+       * guessed correctly, or a file with no extension at all). Language
+       * is otherwise auto-detected on add/rename — this is the one path
+       * that sets it directly, independent of the file's name.
+       */
+      try {
+        await Room.findOneAndUpdate(
+          { roomId: data.roomId, 'files.name': data.fileName },
+          { $set: { 'files.$.language': data.language } }
+        );
+        io.to(data.roomId).emit('language_changed', {
+          fileName: data.fileName,
+          language: data.language,
+          changedBy: data.userId,
+        });
+      } catch (err) {
+        console.error('change_language error:', err);
+      }
+    });
+
     /* ── awareness_update ── */
     socket.on('awareness_update', (data) => {
       /*

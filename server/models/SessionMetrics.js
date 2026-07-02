@@ -67,6 +67,15 @@ const inputLossEventSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const execLatencySchema = new mongoose.Schema(
+  {
+    value: { type: Number, required: true }, // ms, wall-clock POST /api/execute -> response
+    timestamp: { type: Date, default: Date.now },
+    language: { type: String },
+  },
+  { _id: false }
+);
+
 const sessionMetricsSchema = new mongoose.Schema(
   {
     roomId: { type: String, required: true },
@@ -81,6 +90,7 @@ const sessionMetricsSchema = new mongoose.Schema(
     editHistory: [editHistorySchema],
     bandwidthPerEdit: [bandwidthPerEditSchema],
     inputLossEvents: [inputLossEventSchema],
+    execLatencies: [execLatencySchema],
   },
   { timestamps: true }
 );

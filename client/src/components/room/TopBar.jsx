@@ -2,10 +2,10 @@
  * TopBar.jsx — Room top bar. Matches design file exactly.
  * Height: 40px (--layout-topbar-height)
  */
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { LANGUAGE_DOT_COLORS } from '../../styles/index.js'
+import { LANGUAGE_DOT_COLORS, LANGUAGE_OPTIONS, EXECUTABLE_LANGUAGES } from '../../styles/index.js'
 
 const TYPING_TIMEOUT_MS = 2000
 const MAX_VISIBLE_AVATARS = 4
@@ -54,12 +54,23 @@ function ChevronDownIcon() {
   )
 }
 
-function TopBar({ room, user, myUserId, connected, isSyncing, metrics, socket }) {
+function TopBar({ room, user, myUserId, connected, isSyncing, metrics, socket, activeFile, changeLanguage, runCode, isRunning }) {
   const { logout } = useAuth()
   const [copiedCode, setCopiedCode] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [langMenuOpen, setLangMenuOpen] = useState(false)
   const [typingUsers, setTypingUsers] = useState(new Set())
+  const langMenuRef = useRef(null)
+
+  useEffect(() => {
+    if (!langMenuOpen) return
+    function handleClickOutside(e) {
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target)) setLangMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [langMenuOpen])
 
   // Listen for edit events to drive the "typing..." pulse dot on avatars.
   // yjs_update only reaches us for OTHER users' edits (server uses
@@ -110,6 +121,10 @@ function TopBar({ room, user, myUserId, connected, isSyncing, metrics, socket })
   const visibleMembers = room.members.slice(0, MAX_VISIBLE_AVATARS)
   const overflowCount = room.members.length - visibleMembers.length
 
+  const activeFileObj = room.files.find((f) => f.name === activeFile)
+  const currentLanguage = activeFileObj?.language || room.language
+  const isExecutable = EXECUTABLE_LANGUAGES.includes(currentLanguage)
+
   return (
     <div className="panel-topbar">
       {/* left section */}
@@ -150,20 +165,63 @@ function TopBar({ room, user, myUserId, connected, isSyncing, metrics, socket })
         </div>
       )}
 
-      <div
-        className="flex items-center"
-        style={{ gap: 6, padding: '4px 8px', borderRadius: 6, cursor: 'pointer', color: 'var(--color-text-secondary)' }}
-      >
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: 2,
-            background: LANGUAGE_DOT_COLORS[room.language] || 'var(--color-text-muted)',
-          }}
-        />
-        <span style={{ fontSize: 13, textTransform: 'capitalize' }}>{room.language}</span>
-        <ChevronDownIcon />
+      <div ref={langMenuRef} style={{ position: 'relative' }}>
+        <div
+          className="flex items-center"
+          style={{ gap: 6, padding: '4px 8px', borderRadius: 6, cursor: 'pointer', color: 'var(--color-text-secondary)' }}
+          onClick={() => setLangMenuOpen((v) => !v)}
+        >
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: 2,
+              background: LANGUAGE_DOT_COLORS[currentLanguage] || 'var(--color-text-muted)',
+            }}
+          />
+          <span style={{ fontSize: 13, textTransform: 'capitalize' }}>
+            {LANGUAGE_OPTIONS.find((l) => l.value === currentLanguage)?.label || currentLanguage}
+          </span>
+          <ChevronDownIcon />
+        </div>
+        {langMenuOpen && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 32,
+              left: 0,
+              background: 'var(--color-bg-card)',
+              border: '1px solid var(--color-border-strong)',
+              borderRadius: 8,
+              padding: 4,
+              minWidth: 180,
+              zIndex: 20,
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
+            }}
+          >
+            {LANGUAGE_OPTIONS.map((opt) => (
+              <div
+                key={opt.value}
+                className="sidebar-row"
+                style={{ justifyContent: 'space-between' }}
+                onClick={() => {
+                  if (activeFile) changeLanguage(activeFile, opt.value)
+                  setLangMenuOpen(false)
+                }}
+              >
+                <span className="flex items-center" style={{ gap: 8 }}>
+                  <span
+                    style={{ width: 8, height: 8, borderRadius: 2, background: LANGUAGE_DOT_COLORS[opt.value] || 'var(--color-text-muted)' }}
+                  />
+                  {opt.label}
+                </span>
+                {!opt.executable && (
+                  <span style={{ fontSize: 10, color: 'var(--color-text-muted)' }}>(preview only)</span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex items-center" style={{ gap: 6 }}>
@@ -218,9 +276,14 @@ function TopBar({ room, user, myUserId, connected, isSyncing, metrics, socket })
 
       {/* right section */}
       <div className="flex items-center" style={{ gap: 8 }}>
-        <button className="btn btn-run" onClick={() => {}}>
-          <PlayIcon />
-          Run
+        <button
+          className="btn btn-run"
+          onClick={runCode}
+          disabled={isRunning || !isExecutable}
+          title={!isExecutable ? `${currentLanguage} cannot be executed` : undefined}
+        >
+          {isRunning ? <span className="spinner-sm" /> : <PlayIcon />}
+          {isRunning ? 'Running...' : 'Run'}
         </button>
 
         {user ? (

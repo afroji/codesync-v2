@@ -43,6 +43,12 @@ function RoomLayout({
   newFileModalOpen,
   onCloseNewFileModal,
   onCreateFile,
+  changeLanguage,
+  runCode,
+  isRunning,
+  output,
+  stdin,
+  setStdin,
 }) {
   return (
     <div className="room-layout">
@@ -54,6 +60,10 @@ function RoomLayout({
         isSyncing={isSyncing}
         metrics={metrics}
         socket={socket}
+        activeFile={activeFile}
+        changeLanguage={changeLanguage}
+        runCode={runCode}
+        isRunning={isRunning}
       />
       <div className="room-body">
         <LeftSidebar
@@ -87,7 +97,7 @@ function RoomLayout({
             awarenessVersion={awarenessVersion}
             myUserId={myUserId}
           />
-          <BottomPanel />
+          <BottomPanel output={output} stdin={stdin} setStdin={setStdin} isRunning={isRunning} />
         </div>
         <RightSidebar
           room={room}

@@ -392,6 +392,65 @@
   color: var(--color-accent-danger);
 }
 
+/* ---------- Execution output panel (Day 12) ---------- */
+.output-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: var(--layout-panel-padding);
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.output-stdout {
+  color: var(--color-text-secondary);
+}
+
+.output-stderr {
+  color: var(--color-accent-danger);
+}
+
+.output-error {
+  color: var(--color-accent-danger);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: var(--layout-panel-padding);
+}
+
+.output-section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  padding: 6px 12px 2px;
+  text-transform: uppercase;
+}
+
+.output-label-err {
+  color: var(--color-accent-danger);
+}
+
+.output-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  padding: 6px 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.stdin-input {
+  width: 100%;
+  flex: 1;
+  background: var(--color-bg-input);
+  border: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: var(--layout-panel-padding);
+  resize: none;
+  outline: none;
+}
+
 /* ---------- Spinner (room connecting screen) ---------- */
 .spinner {
   width: 22px;
@@ -400,6 +459,19 @@
   border: 2px solid var(--color-border-strong);
   border-top-color: var(--color-accent-primary);
   animation: spin 0.7s linear infinite;
+}
+
+/* ---------- Small spinner (inline in buttons/panels, Day 12) ---------- */
+/* currentColor-based so it reads correctly both on the green Run button
+   (white text) and inside the muted-text output panel "Running..." row. */
+.spinner-sm {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-top-color: currentColor;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
 }
 
 @keyframes spin {
