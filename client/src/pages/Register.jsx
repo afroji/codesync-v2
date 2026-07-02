@@ -123,7 +123,7 @@ function Register() {
           </p>
 
           <a
-            href="/api/auth/google"
+            href={`${import.meta.env.VITE_BACKEND_URL || ''}/api/auth/google`}
             className="font-medium"
             style={{
               width: '100%',

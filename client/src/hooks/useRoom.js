@@ -62,7 +62,8 @@ export default function useRoom(roomId) {
   const myColor = myColorRef.current
 
   useEffect(() => {
-    const socket = io('/', {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || ''
+    const socket = io(backendUrl || '/', {
       transports: ['websocket', 'polling'],
       auth: { token: localStorage.getItem('codesync_token') },
     })
