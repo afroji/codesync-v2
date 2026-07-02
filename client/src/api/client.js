@@ -1,8 +1,7 @@
 // Axios instance with auth interceptor
 import axios from 'axios'
-import { BACKEND_URL } from '../config'
 
-const client = axios.create({ baseURL: `${BACKEND_URL}/api` })
+const client = axios.create({ baseURL: '/api' })
 
 client.interceptors.request.use((config) => {
   const token = localStorage.getItem('codesync_token')

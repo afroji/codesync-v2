@@ -23,19 +23,14 @@ const initializeSocket = require('./socket/collab');
 const { getPistonRuntimes, PISTON_LANGUAGES } = require('./services/piston');
 
 const app = express();
-app.set('trust proxy', true);
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: constants.CLIENT_URL,
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
+  cors: { origin: constants.CLIENT_URL },
 });
 
 initializeSocket(io);
 
-app.use(cors({ origin: constants.CLIENT_URL, credentials: true }));
+app.use(cors({ origin: constants.CLIENT_URL }));
 app.use(helmet());
 if (constants.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -108,7 +103,6 @@ async function start() {
   server.listen(constants.PORT, () => {
     console.log(`CodeSync server running on port ${constants.PORT}`);
     console.log(`Sync mode: ${constants.SYNC_MODE}`);
-    console.log(`CORS origin (CLIENT_URL): ${constants.CLIENT_URL}`);
   });
   checkPistonRuntimes();
 }

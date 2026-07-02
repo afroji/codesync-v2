@@ -4,7 +4,7 @@
  */
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { User } = require('../models');
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BACKEND_URL } = require('./constants');
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require('./constants');
 
 function configure(passport) {
   if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
@@ -17,7 +17,7 @@ function configure(passport) {
       {
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: `${BACKEND_URL}/api/auth/google/callback`,
+        callbackURL: '/api/auth/google/callback',
         scope: ['profile', 'email'],
       },
       async (accessToken, refreshToken, profile, done) => {
